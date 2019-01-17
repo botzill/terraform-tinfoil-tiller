@@ -10,7 +10,8 @@ resource "kubernetes_deployment" "tiller_deploy" {
   } # metadata
 
   spec {
-    replicas = 1
+    replicas = "${var.replicas}"
+    min_ready_seconds = "${var.min_ready_seconds}"
 
     selector {
       match_labels {
