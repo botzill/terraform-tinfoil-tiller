@@ -151,3 +151,13 @@ resource "kubernetes_cluster_role_binding" "tiller" {
     name      = "cluster-admin"
   }
 }
+
+resource "null_resource" "wait_for_tiller" {
+  depends_on = [
+    "kubernetes_cluster_role_binding.tiller"
+  ]
+
+  provisioner "local-exec" {
+    command = "sleep 10"
+  }
+}
