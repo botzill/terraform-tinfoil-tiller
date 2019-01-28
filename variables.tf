@@ -18,5 +18,5 @@ variable "min_ready_seconds" {
 }
 
 variable "replicas" {
-  default = 60
+  default = 1
 }
