@@ -66,16 +66,15 @@ resource "kubernetes_deployment" "tiller_deploy" {
             timeout_seconds       = "1"
           }
 
-          #port {
-          #  name           = "tiller"
-          #  container_port = "44134"
-          #}
-
-
-          #port {
-          #  name           = "http"
-          #  container_port = "44135"
-          #}
+          port {
+            name           = "tiller"
+            container_port = "44134"
+          }
+          
+          port {
+            name           = "http"
+            container_port = "44135"
+          }
 
           # work around not being able to set automountServiceAccountToken
           # directly
@@ -100,32 +99,32 @@ resource "kubernetes_deployment" "tiller_deploy" {
   } # spec
 }
 
-#resource "kubernetes_service" "tiller_deploy" {
-#  metadata {
-#    name      = "tiller-deploy"
-#    namespace = "${var.namespace}"
-#
-#    labels {
-#      name = "tiller"
-#      app  = "helm"
-#    }
-#  } # metadata
-#
-#  spec {
-#    selector {
-#      name = "tiller"
-#      app  = "helm"
-#    }
-#
-#    type = "ClusterIP"
-#
-#    port {
-#      name        = "tiller"
-#      port        = "44134"
-#      target_port = "tiller"
-#    }
-#  } # spec
-#}
+resource "kubernetes_service" "tiller_deploy" {
+  metadata {
+    name      = "tiller-deploy"
+    namespace = "${var.namespace}"
+
+    labels {
+      name = "tiller"
+      app  = "helm"
+    }
+  } # metadata
+
+  spec {
+    selector {
+      name = "tiller"
+      app  = "helm"
+    }
+
+    type = "ClusterIP"
+
+    port {
+      name        = "tiller"
+      port        = "44134"
+      target_port = "tiller"
+    }
+  } # spec
+}
 
 resource "kubernetes_service_account" "tiller" {
   metadata {
