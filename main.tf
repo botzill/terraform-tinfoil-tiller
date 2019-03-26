@@ -43,7 +43,7 @@ resource "kubernetes_deployment" "tiller_deploy" {
 
           env {
             name  = "TILLER_HISTORY_MAX"
-            value = "0"
+            value = "${var.tiller_history_max}"
           }
 
           liveness_probe {
@@ -70,7 +70,7 @@ resource "kubernetes_deployment" "tiller_deploy" {
             name           = "tiller"
             container_port = "44134"
           }
-          
+
           port {
             name           = "http"
             container_port = "44135"

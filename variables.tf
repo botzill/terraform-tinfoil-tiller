@@ -20,3 +20,7 @@ variable "min_ready_seconds" {
 variable "replicas" {
   default = 1
 }
+
+variable "tiller_history_max" {
+  default = 3
+}
