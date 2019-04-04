@@ -1,13 +1,14 @@
 resource "kubernetes_deployment" "tiller_deploy" {
   metadata {
-    name      = "tiller-deploy"
+    name = "tiller-deploy"
     namespace = "${var.namespace}"
 
     labels {
       name = "tiller"
-      app  = "helm"
+      app = "helm"
     }
-  } # metadata
+  }
+  # metadata
 
   spec {
     replicas = "${var.replicas}"
@@ -16,7 +17,7 @@ resource "kubernetes_deployment" "tiller_deploy" {
     selector {
       match_labels {
         name = "tiller"
-        app  = "helm"
+        app = "helm"
       }
     }
 
@@ -24,25 +25,30 @@ resource "kubernetes_deployment" "tiller_deploy" {
       metadata {
         labels {
           name = "tiller"
-          app  = "helm"
+          app = "helm"
+        }
+        annotations {
+          "fluentbit.io/exclude" = "true"
         }
       }
 
       spec {
         container {
-          image             = "${var.tiller_image}"
-          name              = "tiller"
+          image = "${var.tiller_image}"
+          name = "tiller"
           image_pull_policy = "IfNotPresent"
-          command           = ["/tiller"]
-          args              = ["--listen=localhost:44134"]
+          command = [
+            "/tiller"]
+          args = [
+            "--listen=localhost:44134"]
 
           env {
-            name  = "TILLER_NAMESPACE"
+            name = "TILLER_NAMESPACE"
             value = "${var.namespace}"
           }
 
           env {
-            name  = "TILLER_HISTORY_MAX"
+            name = "TILLER_HISTORY_MAX"
             value = "${var.tiller_history_max}"
           }
 
@@ -53,7 +59,7 @@ resource "kubernetes_deployment" "tiller_deploy" {
             }
 
             initial_delay_seconds = "1"
-            timeout_seconds       = "1"
+            timeout_seconds = "1"
           }
 
           readiness_probe {
@@ -63,16 +69,16 @@ resource "kubernetes_deployment" "tiller_deploy" {
             }
 
             initial_delay_seconds = "1"
-            timeout_seconds       = "1"
+            timeout_seconds = "1"
           }
 
           port {
-            name           = "tiller"
+            name = "tiller"
             container_port = "44134"
           }
 
           port {
-            name           = "http"
+            name = "http"
             container_port = "44135"
           }
 
@@ -80,10 +86,11 @@ resource "kubernetes_deployment" "tiller_deploy" {
           # directly
           volume_mount {
             mount_path = "/var/run/secrets/kubernetes.io/serviceaccount"
-            name       = "${kubernetes_service_account.tiller.default_secret_name}"
-            read_only  = true
+            name = "${kubernetes_service_account.tiller.default_secret_name}"
+            read_only = true
           }
-        } # container
+        }
+        # container
 
         volume {
           name = "${kubernetes_service_account.tiller.default_secret_name}"
@@ -94,41 +101,46 @@ resource "kubernetes_deployment" "tiller_deploy" {
         }
 
         service_account_name = "${var.service_account}"
-      } # spec
-    } # template
-  } # spec
+      }
+      # spec
+    }
+    # template
+  }
+  # spec
 }
 
 resource "kubernetes_service" "tiller_deploy" {
   metadata {
-    name      = "tiller-deploy"
+    name = "tiller-deploy"
     namespace = "${var.namespace}"
 
     labels {
       name = "tiller"
-      app  = "helm"
+      app = "helm"
     }
-  } # metadata
+  }
+  # metadata
 
   spec {
     selector {
       name = "tiller"
-      app  = "helm"
+      app = "helm"
     }
 
     type = "ClusterIP"
 
     port {
-      name        = "tiller"
-      port        = "44134"
+      name = "tiller"
+      port = "44134"
       target_port = "tiller"
     }
-  } # spec
+  }
+  # spec
 }
 
 resource "kubernetes_service_account" "tiller" {
   metadata {
-    name      = "${var.service_account}"
+    name = "${var.service_account}"
     namespace = "${var.namespace}"
   }
 }
@@ -139,15 +151,15 @@ resource "kubernetes_cluster_role_binding" "tiller" {
   }
 
   subject {
-    kind      = "ServiceAccount"
-    name      = "${var.service_account}"
+    kind = "ServiceAccount"
+    name = "${var.service_account}"
     namespace = "${var.namespace}"
     api_group = ""
   }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
+    kind = "ClusterRole"
+    name = "cluster-admin"
   }
 }
