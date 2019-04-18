@@ -33,15 +33,15 @@ resource "kubernetes_deployment" "tiller_deploy" {
       }
 
       spec {
+        service_account_name = "${var.service_account}"
         container {
           image = "${var.tiller_image}"
           name = "tiller"
           image_pull_policy = "IfNotPresent"
-          command = [
-            "/tiller"]
-          args = [
-            "--listen=localhost:44134"]
-
+//          command = [
+//            "/tiller"]
+//          args = [
+//            "--listen=localhost:44134"]
           env {
             name = "TILLER_NAMESPACE"
             value = "${var.namespace}"
@@ -99,8 +99,6 @@ resource "kubernetes_deployment" "tiller_deploy" {
             secret_name = "${kubernetes_service_account.tiller.default_secret_name}"
           }
         }
-
-        service_account_name = "${var.service_account}"
       }
       # spec
     }
