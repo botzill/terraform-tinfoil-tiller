@@ -28,7 +28,7 @@ module "tiller" {
 }
 
 provider "helm" {
-  version = "~> 0.9.0"
+  version = "~> 0.10"
 
   debug           = true
   service_account = "${module.tiller.service_account}"

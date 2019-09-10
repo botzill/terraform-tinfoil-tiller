@@ -10,7 +10,7 @@ variable "service_account" {
 
 variable "tiller_image" {
   description = "tiller docker image."
-  default     = "gcr.io/kubernetes-helm/tiller:v2.11.0"
+  default     = "gcr.io/kubernetes-helm/tiller:v2.14.3"
 }
 
 variable "min_ready_seconds" {

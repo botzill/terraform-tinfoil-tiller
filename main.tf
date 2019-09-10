@@ -89,6 +89,18 @@ resource "kubernetes_deployment" "tiller_deploy" {
             name = "${kubernetes_service_account.tiller.default_secret_name}"
             read_only = true
           }
+
+          resources {
+            requests {
+              cpu = "100m"
+              memory = "50Mi"
+            }
+
+            limits {
+              cpu = "200m"
+              memory = "256Mi"
+            }
+          }
         }
         # container
 
