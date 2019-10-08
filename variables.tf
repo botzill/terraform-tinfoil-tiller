@@ -24,3 +24,4 @@ variable "replicas" {
 variable "tiller_history_max" {
   default = 3
 }
+
